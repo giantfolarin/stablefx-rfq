@@ -248,4 +248,4 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ---
 
-**⚠️ Testnet Only** - This is experimental software. Do not use with mainnet funds.
+⚠️ **Testnet Only**
