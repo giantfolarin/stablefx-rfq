@@ -232,13 +232,13 @@ pm2 logs system-maker
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details
+MIT License
 
 ## Support
 
-- Issues: https://github.com/YOUR_USERNAME/stablefx/issues
+- Issues: https://github.com/giantfolarin/stablefx-rfq/issues
 - Documentation: See `/docs` folder
-- Arc Network: https://circle.com/arc
+- Arc Network: https://www.arc.network/
 
 ## Acknowledgments
 
