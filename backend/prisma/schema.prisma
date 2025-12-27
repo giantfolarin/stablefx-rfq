@@ -1,0 +1,94 @@
+// Prisma schema for StableFX Demo
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// User accounts
+model Account {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  balances  Balance[]
+  swaps     Swap[]
+  positions PerpPosition[]
+  payouts   Payout[]
+}
+
+// Multi-currency balances
+model Balance {
+  id        String   @id @default(uuid())
+  accountId String
+  currency  String   // e.g., "USDC_arc", "EURC_arc", "USDC_base"
+  amount    Float    @default(0)
+  updatedAt DateTime @updatedAt
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  @@unique([accountId, currency])
+}
+
+// Swap transactions
+model Swap {
+  id            String   @id @default(uuid())
+  accountId     String
+  fromCurrency  String
+  toCurrency    String
+  fromAmount    Float
+  toAmount      Float
+  rate          Float
+  spread        Float
+  status        String   // "pending", "executed", "failed"
+  executedAt    DateTime @default(now())
+
+  account Account @relation(fields: [accountId], references: [id])
+}
+
+// Perpetual positions
+model PerpPosition {
+  id           String   @id @default(uuid())
+  accountId    String
+  pair         String   // e.g., "USDC/EURC"
+  size         Float    // Position size
+  entryPrice   Float    // Entry price
+  leverage     Float    // Leverage (e.g., 1.0, 2.0, 5.0)
+  side         String   // "long" or "short"
+  unrealizedPnL Float   @default(0)
+  status       String   // "open", "closed"
+  openedAt     DateTime @default(now())
+  closedAt     DateTime?
+  closePrice   Float?
+
+  account Account @relation(fields: [accountId], references: [id])
+}
+
+// Cross-border payouts
+model Payout {
+  id              String   @id @default(uuid())
+  accountId       String
+  fromRegion      String   // e.g., "US", "EU", "APAC"
+  toRegion        String
+  currency        String
+  amount          Float
+  status          String   // "pending", "completed", "failed"
+  transactionHash String?  // Simulated tx hash
+  createdAt       DateTime @default(now())
+  completedAt     DateTime?
+
+  account Account @relation(fields: [accountId], references: [id])
+}
+
+// Price oracle history (for perps)
+model PriceOracle {
+  id        String   @id @default(uuid())
+  pair      String   // e.g., "USDC/EURC"
+  price     Float
+  timestamp DateTime @default(now())
+}

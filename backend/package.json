@@ -1,0 +1,40 @@
+{
+  "name": "stablefx-backend",
+  "version": "1.0.0",
+  "description": "StableFX Backend - Stablecoin FX Engine on Arc (Demo)",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "system-maker": "ts-node services/systemMaker.ts",
+    "system-maker:dev": "ts-node-dev --respawn services/systemMaker.ts",
+    "start:all": "concurrently \"npm run dev\" \"npm run system-maker:dev\"",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.0",
+    "@nestjs/core": "^10.3.0",
+    "@nestjs/platform-express": "^10.3.0",
+    "@prisma/client": "^5.8.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.13.0",
+    "express": "^4.18.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "prisma": "^5.8.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3"
+  }
+}

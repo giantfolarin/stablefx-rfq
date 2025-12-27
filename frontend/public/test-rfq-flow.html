@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RFQ Flow Diagnostic</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #0f0; }
+        button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        pre { background: #000; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .warning { color: #ff0; }
+    </style>
+</head>
+<body>
+    <h1>🔍 RFQ Flow Diagnostic Tool</h1>
+
+    <h2>Step 1: Check LocalStorage</h2>
+    <button onclick="checkLocalStorage()">Check Stored Quotes</button>
+    <button onclick="clearLocalStorage()">Clear All Quotes</button>
+    <pre id="storage-output"></pre>
+
+    <h2>Step 2: Test Public RFQ Detection</h2>
+    <button onclick="testPublicRFQDetection()">Test isSpecificTaker()</button>
+    <pre id="detection-output"></pre>
+
+    <h2>Step 3: Simulate Quote Creation</h2>
+    <button onclick="simulatePublicQuote()">Create Test Public RFQ</button>
+    <button onclick="simulatePrivateQuote()">Create Test Private RFQ</button>
+    <pre id="simulation-output"></pre>
+
+    <script>
+        const ANY_TAKER = '0x0000000000000000000000000000000000000000';
+        const STORAGE_KEY = 'rfq_quotes_v1';
+
+        function checkLocalStorage() {
+            const output = document.getElementById('storage-output');
+            const stored = localStorage.getItem(STORAGE_KEY);
+
+            if (!stored) {
+                output.innerHTML = '<span class="warning">⚠️  No quotes in localStorage</span>';
+                return;
+            }
+
+            try {
+                const quotes = JSON.parse(stored);
+                let html = `<span class="success">✅ Found ${quotes.length} quote(s) in localStorage</span>\n\n`;
+
+                quotes.forEach((q, i) => {
+                    const isPublic = !q.rfq.taker || q.rfq.taker === '' || q.rfq.taker === ANY_TAKER;
+                    html += `\n<strong>Quote ${i + 1}:</strong>\n`;
+                    html += `  Maker: ${q.rfq.maker}\n`;
+                    html += `  Taker: ${q.rfq.taker}\n`;
+                    html += `  Type: ${isPublic ? '<span class="success">PUBLIC 🌐</span>' : '<span class="warning">PRIVATE 🔒</span>'}\n`;
+                    html += `  TokenIn: ${q.rfq.tokenIn}\n`;
+                    html += `  TokenOut: ${q.rfq.tokenOut}\n`;
+                    html += `  AmountIn: ${q.rfq.amountIn}\n`;
+                    html += `  AmountOut: ${q.rfq.amountOut}\n`;
+                    html += `  Expiry: ${q.rfq.expiry}\n`;
+                    html += `  Signature: ${q.signature.slice(0, 20)}...\n`;
+                });
+
+                output.innerHTML = html;
+            } catch (error) {
+                output.innerHTML = `<span class="error">❌ Error parsing localStorage: ${error.message}</span>`;
+            }
+        }
+
+        function clearLocalStorage() {
+            localStorage.removeItem(STORAGE_KEY);
+            document.getElementById('storage-output').innerHTML = '<span class="success">✅ LocalStorage cleared!</span>';
+        }
+
+        function testPublicRFQDetection() {
+            const output = document.getElementById('detection-output');
+
+            const tests = [
+                { taker: '', expected: false, label: 'Empty string' },
+                { taker: ANY_TAKER, expected: false, label: 'Zero address (ANY_TAKER)' },
+                { taker: '0x1234567890123456789012345678901234567890', expected: true, label: 'Specific address' },
+                { taker: null, expected: false, label: 'null' },
+                { taker: undefined, expected: false, label: 'undefined' }
+            ];
+
+            let html = '<strong>Testing isSpecificTaker() logic:</strong>\n\n';
+
+            tests.forEach(test => {
+                const isSpecific = !(!test.taker || test.taker === '' || test.taker === ANY_TAKER);
+                const passed = isSpecific === test.expected;
+
+                html += `${passed ? '✅' : '❌'} ${test.label}: ${JSON.stringify(test.taker)}\n`;
+                html += `   Expected isSpecific=${test.expected}, Got=${isSpecific}\n`;
+                html += `   Quote type: ${isSpecific ? 'PRIVATE 🔒' : 'PUBLIC 🌐'}\n\n`;
+            });
+
+            output.innerHTML = html;
+        }
+
+        function simulatePublicQuote() {
+            const output = document.getElementById('simulation-output');
+
+            const quote = {
+                rfq: {
+                    maker: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
+                    taker: ANY_TAKER, // ✅ PUBLIC RFQ
+                    tokenIn: '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d',
+                    tokenOut: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+                    amountIn: '100000000',
+                    amountOut: '99900000',
+                    nonce: Date.now().toString(),
+                    expiry: (Math.floor(Date.now() / 1000) + 300).toString()
+                },
+                signature: '0x' + 'a'.repeat(130)
+            };
+
+            const stored = localStorage.getItem(STORAGE_KEY);
+            const quotes = stored ? JSON.parse(stored) : [];
+            quotes.push(quote);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quotes));
+
+            output.innerHTML = `<span class="success">✅ Created PUBLIC RFQ (taker = ${ANY_TAKER})</span>\n\n` +
+                `Maker: ${quote.rfq.maker}\n` +
+                `Taker: ${quote.rfq.taker}\n` +
+                `Type: PUBLIC 🌐\n\n` +
+                `<strong>Now refresh the app and check Taker View!</strong>`;
+        }
+
+        function simulatePrivateQuote() {
+            const output = document.getElementById('simulation-output');
+
+            const quote = {
+                rfq: {
+                    maker: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
+                    taker: '0x1234567890123456789012345678901234567890', // ✅ PRIVATE RFQ
+                    tokenIn: '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d',
+                    tokenOut: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+                    amountIn: '100000000',
+                    amountOut: '99900000',
+                    nonce: Date.now().toString(),
+                    expiry: (Math.floor(Date.now() / 1000) + 300).toString()
+                },
+                signature: '0x' + 'b'.repeat(130)
+            };
+
+            const stored = localStorage.getItem(STORAGE_KEY);
+            const quotes = stored ? JSON.parse(stored) : [];
+            quotes.push(quote);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(quotes));
+
+            output.innerHTML = `<span class="success">✅ Created PRIVATE RFQ (taker = ${quote.rfq.taker})</span>\n\n` +
+                `Maker: ${quote.rfq.maker}\n` +
+                `Taker: ${quote.rfq.taker}\n` +
+                `Type: PRIVATE 🔒\n\n` +
+                `<strong>Now refresh the app and check Taker View!</strong>`;
+        }
+    </script>
+</body>
+</html>

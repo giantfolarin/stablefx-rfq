@@ -1,0 +1,136 @@
+# ============================================================================
+# STABLEFX - GitHub Ignore File
+# ============================================================================
+# This file prevents sensitive data and local-only files from being committed
+
+# ============================================================================
+# ENVIRONMENT VARIABLES (CRITICAL - CONTAINS SECRETS)
+# ============================================================================
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Keep example files for documentation
+!.env.example
+
+# ============================================================================
+# PRIVATE KEYS & SECRETS (NEVER COMMIT THESE)
+# ============================================================================
+*.key
+*.pem
+secrets/
+.secret
+private-keys/
+
+# ============================================================================
+# DEPENDENCIES
+# ============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ============================================================================
+# BUILD ARTIFACTS
+# ============================================================================
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# NestJS
+backend/dist/
+backend/build/
+
+# ============================================================================
+# LOGS
+# ============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# PM2 logs
+.pm2/
+pm2-logs/
+
+# ============================================================================
+# DATABASES (LOCAL DEVELOPMENT ONLY)
+# ============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+backend/prisma/*.db
+backend/prisma/*.db-journal
+
+# Keep migrations
+!backend/prisma/migrations/
+
+# ============================================================================
+# CACHE & TEMPORARY FILES
+# ============================================================================
+.cache/
+*.cache
+.temp/
+temp/
+tmp/
+.DS_Store
+Thumbs.db
+
+# TypeScript cache
+*.tsbuildinfo
+
+# ============================================================================
+# IDE & EDITOR FILES
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-*
+
+# ============================================================================
+# TESTING
+# ============================================================================
+coverage/
+.nyc_output/
+*.lcov
+
+# Test wallets (if any)
+test-wallets/
+test-private-keys.txt
+
+# ============================================================================
+# OS FILES
+# ============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ============================================================================
+# MISC
+# ============================================================================
+.vercel
+.turbo
+*.local
+
+# Local development URLs
+local-urls.txt
