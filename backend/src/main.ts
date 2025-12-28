@@ -10,7 +10,12 @@ async function bootstrap() {
 
   // Enable CORS for frontend
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'https://rfqarc.vercel.app',
+      /\.vercel\.app$/  // Allow all Vercel preview deployments
+    ],
     credentials: true,
   });
 
@@ -26,7 +31,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   const port = process.env.PORT || 3001;
-  await app.listen(port);
+  // Listen on 0.0.0.0 to accept external connections (required for Railway)
+  await app.listen(port, '0.0.0.0');
 
   console.log(`
   ╔═══════════════════════════════════════════════════════════╗
