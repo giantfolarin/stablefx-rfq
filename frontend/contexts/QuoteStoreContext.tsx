@@ -29,16 +29,31 @@ function loadQuotesFromStorage(): RFQQuote[] {
     const parsed = JSON.parse(stored)
 
     // Convert serialized BigInt strings back to BigInt
-    return parsed.map((item: any) => ({
-      rfq: {
+    return parsed.map((item: any) => {
+      const rfq = {
         ...item.rfq,
         amountIn: BigInt(item.rfq.amountIn),
         amountOut: BigInt(item.rfq.amountOut),
         nonce: BigInt(item.rfq.nonce),
         expiry: BigInt(item.rfq.expiry)
-      },
-      signature: item.signature
-    }))
+      }
+
+      // Calculate metadata if not present
+      const now = Math.floor(Date.now() / 1000)
+      const expiry = Number(rfq.expiry)
+      const rate = (Number(rfq.amountOut) / Number(rfq.amountIn)).toFixed(6)
+
+      return {
+        rfq,
+        signature: item.signature,
+        metadata: item.metadata || {
+          createdAt: item.metadata?.createdAt || now,
+          pair: item.metadata?.pair || 'USDC/EURC',
+          rate: item.metadata?.rate || rate,
+          expiresIn: item.metadata?.expiresIn || Math.max(0, expiry - now)
+        }
+      }
+    })
   } catch (error) {
     console.error('Failed to load quotes from localStorage:', error)
     return []
@@ -58,7 +73,8 @@ function saveQuotesToStorage(quotes: RFQQuote[]): void {
         nonce: quote.rfq.nonce.toString(),
         expiry: quote.rfq.expiry.toString()
       },
-      signature: quote.signature
+      signature: quote.signature,
+      metadata: quote.metadata
     }))
 
     localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(serialized))
@@ -73,15 +89,28 @@ function saveQuotesToStorage(quotes: RFQQuote[]): void {
 // ============================================================================
 
 function parseQuoteFromAPI(apiQuote: any): RFQQuote {
+  const rfq = {
+    ...apiQuote.rfq,
+    amountIn: BigInt(apiQuote.rfq.amountIn),
+    amountOut: BigInt(apiQuote.rfq.amountOut),
+    nonce: BigInt(apiQuote.rfq.nonce),
+    expiry: BigInt(apiQuote.rfq.expiry)
+  }
+
+  // Calculate metadata
+  const now = Math.floor(Date.now() / 1000)
+  const expiry = Number(rfq.expiry)
+  const rate = (Number(rfq.amountOut) / Number(rfq.amountIn)).toFixed(6)
+
   return {
-    rfq: {
-      ...apiQuote.rfq,
-      amountIn: BigInt(apiQuote.rfq.amountIn),
-      amountOut: BigInt(apiQuote.rfq.amountOut),
-      nonce: BigInt(apiQuote.rfq.nonce),
-      expiry: BigInt(apiQuote.rfq.expiry)
-    },
-    signature: apiQuote.signature
+    rfq,
+    signature: apiQuote.signature,
+    metadata: apiQuote.metadata || {
+      createdAt: apiQuote.metadata?.createdAt || now,
+      pair: apiQuote.metadata?.pair || 'USDC/EURC',
+      rate: apiQuote.metadata?.rate || rate,
+      expiresIn: apiQuote.metadata?.expiresIn || Math.max(0, expiry - now)
+    }
   }
 }
 
@@ -94,7 +123,8 @@ function serializeQuoteForAPI(quote: RFQQuote): any {
       nonce: quote.rfq.nonce.toString(),
       expiry: quote.rfq.expiry.toString()
     },
-    signature: quote.signature
+    signature: quote.signature,
+    metadata: quote.metadata
   }
 }
 
