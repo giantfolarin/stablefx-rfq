@@ -37,7 +37,7 @@ function markRFQAsSettled(rfqId: string): void {
   try {
     const settled = getSettledRFQs()
     settled.add(rfqId)
-    sessionStorage.setItem(SETTLED_RFQS_KEY, JSON.stringify([...settled]))
+    sessionStorage.setItem(SETTLED_RFQS_KEY, JSON.stringify(Array.from(settled)))
     console.log('✅ Marked RFQ as SETTLED:', rfqId)
   } catch (err) {
     console.error('Failed to mark RFQ as settled:', err)
