@@ -75,6 +75,11 @@ export function useRFQHistory() {
         const parsedEvents = await Promise.all(
           eventLogs.map(async (log) => {
             try {
+              // Type guard: only process EventLog (has args), skip plain Log
+              if (!('args' in log)) {
+                return null
+              }
+
               const block = await provider.getBlock(log.blockNumber)
               return {
                 maker: log.args?.maker || '',
