@@ -368,7 +368,7 @@ export function useRFQ() {
         // The quote was filled by someone else, but we don't have the txHash
 
         alert('❌ Quote Already Filled\n\nThis quote has been filled by another user.\n\nThe maker\'s nonce has been consumed. Try filling a different quote.')
-        return { success: false, errorType: 'NONCE_CONSUMED' as const }
+        return { success: false }
       }
 
       // Parse other contract revert messages
