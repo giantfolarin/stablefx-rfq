@@ -29,16 +29,12 @@ export class RfqService {
   }
 
   createQuote(createQuoteDto: CreateQuoteDto): RFQQuote {
-    // Check if quote already exists (by maker + nonce)
-    const exists = this.quotes.some(
+    // Remove any existing quote with the same maker + nonce (allow replacement)
+    this.quotes = this.quotes.filter(
       (q) =>
-        q.rfq.maker === createQuoteDto.rfq.maker &&
-        q.rfq.nonce === createQuoteDto.rfq.nonce,
+        !(q.rfq.maker === createQuoteDto.rfq.maker &&
+          q.rfq.nonce === createQuoteDto.rfq.nonce),
     );
-
-    if (exists) {
-      throw new Error('Quote with this maker and nonce already exists');
-    }
 
     const quote: RFQQuote = {
       rfq: createQuoteDto.rfq,
@@ -46,6 +42,7 @@ export class RfqService {
     };
 
     this.quotes.push(quote);
+    console.log(`✅ Quote added (maker: ${quote.rfq.maker.slice(0, 8)}..., nonce: ${quote.rfq.nonce})`);
     return quote;
   }
 
