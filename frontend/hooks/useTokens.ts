@@ -79,6 +79,17 @@ export function useTokens() {
         approvalAmount = parseUnits(amount, await contract.decimals())
       }
 
+      // Check current allowance first (skip approval if already sufficient)
+      const currentAllowance = await contract.allowance(account, spenderAddress)
+      console.log('Current allowance:', currentAllowance.toString())
+      console.log('Required amount:', approvalAmount.toString())
+
+      if (currentAllowance >= approvalAmount) {
+        console.log('✅ Sufficient allowance already exists - skipping approval')
+        setIsLoading(false)
+        return true
+      }
+
       console.log('🔵 Approving token:', {
         token: tokenAddress,
         spender: spenderAddress,
