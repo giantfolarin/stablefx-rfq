@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { WalletProvider } from '@/contexts/WalletContext'
 import { QuoteStoreProvider } from '@/contexts/QuoteStoreContext'
-import { SWAP_CONTRACT_ADDRESS } from '@/lib/contracts'
 import Navbar from '@/components/Navbar'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -41,7 +40,7 @@ export default function RootLayout({
                 <div>
                   <h4 className="font-display font-bold text-white mb-4">StableFX</h4>
                   <p className="text-sm text-gray-400">
-                    Institutional RFQ settlement infrastructure on Circle Arc L1
+                    Institutional RFQ settlement on Arc L1
                   </p>
                 </div>
                 <div>
@@ -59,17 +58,20 @@ export default function RootLayout({
                     <li>• Circle Arc L1 Blockchain</li>
                     <li>• USDC-Native Gas Fees</li>
                     <li>• Sub-Second Finality</li>
-                    <li>• EVM Compatible</li>
                   </ul>
                 </div>
               </div>
               <div className="border-t border-gray-800 pt-8 text-center">
-                <p className="text-sm text-gray-500">
-                  Web3 Enabled • Connect your wallet to interact with the RFQ contract
-                </p>
-                <p className="text-xs text-gray-600 mt-2">
-                  Contract: {SWAP_CONTRACT_ADDRESS.slice(0, 6)}...{SWAP_CONTRACT_ADDRESS.slice(-4)}
-                </p>
+                <a
+                  href="https://github.com/giantfolarin/stablefx-rfq"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-gray-500 hover:text-gray-300 transition-colors inline-flex items-center gap-2"
+                >
+                  <span>Open Source</span>
+                  <span>•</span>
+                  <span className="underline decoration-dotted underline-offset-4">GitHub ↗</span>
+                </a>
               </div>
             </div>
           </footer>
