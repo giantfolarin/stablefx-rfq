@@ -9,13 +9,13 @@ import { RfqModule } from './rfq/rfq.module';
 
 @Module({
   imports: [
-    PrismaModule,
-    SwapModule,
-    PerpModule,
-    TreasuryModule,
-    OracleModule,
-    AccountModule,
-    RfqModule,
+    // PrismaModule, // Disabled for Railway - RFQ uses in-memory storage
+    // SwapModule, // Requires database
+    // PerpModule, // Requires database
+    // TreasuryModule, // Requires database
+    // OracleModule, // Requires database
+    // AccountModule, // Requires database
+    RfqModule, // Works without database (in-memory storage)
   ],
 })
 export class AppModule {}
