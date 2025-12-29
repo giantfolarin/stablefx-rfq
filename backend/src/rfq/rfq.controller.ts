@@ -23,7 +23,16 @@ export class RfqController {
   @Post('quotes')
   @HttpCode(HttpStatus.CREATED)
   createQuote(@Body() createQuoteDto: CreateQuoteDto) {
-    return this.rfqService.createQuote(createQuoteDto);
+    try {
+      console.log('📥 Received quote creation request:', JSON.stringify(createQuoteDto, null, 2));
+      const result = this.rfqService.createQuote(createQuoteDto);
+      console.log('✅ Quote created successfully');
+      return result;
+    } catch (error) {
+      console.error('❌ Error creating quote:', error.message);
+      console.error('Stack:', error.stack);
+      throw error;
+    }
   }
 
   @Delete('quotes/:maker/:nonce')
