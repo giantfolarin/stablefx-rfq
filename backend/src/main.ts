@@ -14,6 +14,8 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:3001',
       'https://rfqarc.vercel.app',
+      'https://rfqarc.xyz',
+      'https://www.rfqarc.xyz',
       /\.vercel\.app$/  // Allow all Vercel preview deployments
     ],
     credentials: true,
