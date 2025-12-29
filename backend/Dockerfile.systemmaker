@@ -1,0 +1,22 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+# Generate Prisma client (needed for types even though we don't use database)
+RUN npx prisma generate
+
+# Build TypeScript
+RUN npm run build
+
+# Compile system maker TypeScript file
+RUN npx tsc services/systemMaker.ts --outDir dist/services --esModuleInterop --resolveJsonModule --module commonjs --target ES2021
+
+EXPOSE 3001
+
+# Run system maker instead of main backend
+CMD ["node", "dist/services/systemMaker.js"]
