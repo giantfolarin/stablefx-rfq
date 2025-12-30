@@ -181,17 +181,17 @@ export default function QuoteCreator() {
   }
 
   return (
-    <div className="bg-[#111827] border border-[#1F2937] rounded-xl p-6 space-y-6">
+    <div className="bg-[#111827] border border-[#1F2937] rounded-xl p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header - Dark Theme */}
       <div>
-        <h2 className="text-[20px] font-bold text-[#E5E7EB]">Create RFQ Quote</h2>
-        <p className="text-[13px] text-[#9CA3AF] mt-1">
+        <h2 className="text-[18px] sm:text-[20px] font-bold text-[#E5E7EB]">Create RFQ Quote</h2>
+        <p className="text-[12px] sm:text-[13px] text-[#9CA3AF] mt-1">
           Set your price, sign offchain, and broadcast to takers
         </p>
       </div>
 
       {/* Token Pair Selection - Dark Theme */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <div>
           <label className="block text-[12px] font-semibold text-[#9CA3AF] uppercase tracking-wide mb-2">
             Taker Pays
@@ -378,8 +378,8 @@ export default function QuoteCreator() {
 
       {/* Active Quotes - Dark Theme */}
       {myQuotes.length > 0 && (
-        <div className="mt-6 pt-6 border-t border-[#374151]">
-          <h3 className="text-[16px] font-bold text-[#E5E7EB] mb-3 uppercase tracking-wide">Your Active Quotes</h3>
+        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-[#374151]">
+          <h3 className="text-[14px] sm:text-[16px] font-bold text-[#E5E7EB] mb-3 uppercase tracking-wide">Your Active Quotes</h3>
           <div className="space-y-3">
             {myQuotes.map((quote, idx) => {
               const tokenInSymbol = getTokenSymbol(quote.rfq.tokenIn)
@@ -392,7 +392,7 @@ export default function QuoteCreator() {
               return (
                 <div
                   key={`${quote.rfq.maker}-${quote.rfq.nonce}`}
-                  className={`border-2 rounded-lg p-4 transition-all ${
+                  className={`border-2 rounded-lg p-3 sm:p-4 transition-all ${
                     isExpiring
                       ? 'bg-[#FBBF24]/[0.08] border-[#FBBF24]/30'
                       : 'bg-[#3B82F6]/[0.08] border-[#3B82F6]/30'
@@ -400,17 +400,17 @@ export default function QuoteCreator() {
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <p className="font-bold text-[16px] text-[#E5E7EB]">
+                      <p className="font-bold text-[14px] sm:text-[16px] text-[#E5E7EB]">
                         {tokenInSymbol} → {tokenOutSymbol}
                       </p>
-                      <p className="text-[11px] text-[#6B7280] font-mono mt-1">
+                      <p className="text-[10px] sm:text-[11px] text-[#6B7280] font-mono mt-1">
                         Maker: {formatAddress(quote.rfq.maker)}
                       </p>
-                      <p className="text-[11px] text-[#6B7280] font-mono mt-0.5">
+                      <p className="text-[10px] sm:text-[11px] text-[#6B7280] font-mono mt-0.5">
                         rfqId: {rfqId.slice(0, 10)}...
                       </p>
                     </div>
-                    <div className={`px-3 py-1 rounded text-[13px] font-semibold ${
+                    <div className={`px-2 sm:px-3 py-1 rounded text-[12px] sm:text-[13px] font-semibold ${
                       isExpiring
                         ? 'bg-[#FBBF24]/20 text-[#FBBF24]'
                         : 'bg-[#93C5FD]/20 text-[#93C5FD]'
@@ -419,16 +419,16 @@ export default function QuoteCreator() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-3">
                     <div>
-                      <p className="text-[11px] text-[#9CA3AF] uppercase tracking-wide">Rate</p>
-                      <p className="font-semibold text-[#93C5FD] font-mono text-[13px]">
+                      <p className="text-[10px] sm:text-[11px] text-[#9CA3AF] uppercase tracking-wide">Rate</p>
+                      <p className="font-semibold text-[#93C5FD] font-mono text-[12px] sm:text-[13px]">
                         1 {tokenInSymbol} = {(Number(formatUnits(quote.rfq.amountOut, 6)) / Number(formatUnits(quote.rfq.amountIn, 6))).toFixed(6)} {tokenOutSymbol}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[11px] text-[#9CA3AF] uppercase tracking-wide">Amount</p>
-                      <p className="font-semibold text-[#E5E7EB] font-mono text-[13px]">
+                      <p className="text-[10px] sm:text-[11px] text-[#9CA3AF] uppercase tracking-wide">Amount</p>
+                      <p className="font-semibold text-[#E5E7EB] font-mono text-[12px] sm:text-[13px]">
                         {formatUnits(quote.rfq.amountIn, 6)} {tokenInSymbol}
                       </p>
                     </div>

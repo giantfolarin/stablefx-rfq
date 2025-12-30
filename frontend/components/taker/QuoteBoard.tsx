@@ -323,17 +323,17 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
   return (
     <div className="bg-[#0B0F14] border border-[#1F2937]">
       {/* Institutional Header - Dark Theme */}
-      <div className="border-b border-[#374151] px-5 py-3 bg-[#161E2E]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <h2 className="text-[13px] font-semibold text-[#E5E7EB] uppercase tracking-wider">RFQ DESK</h2>
-            <span className="text-[11px] text-[#9CA3AF] font-mono">
-              {userQuotes.length} {userQuotes.length === 1 ? 'market quote' : 'market quotes'}
-              {systemQuotes.length > 0 && ` + ${systemQuotes.length} reference`}
-              {totalPages > 1 && ` • page ${currentPage}/${totalPages}`}
+      <div className="border-b border-[#374151] px-3 sm:px-5 py-2.5 sm:py-3 bg-[#161E2E]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+          <div className="flex items-center gap-3 sm:gap-6">
+            <h2 className="text-[11px] sm:text-[13px] font-semibold text-[#E5E7EB] uppercase tracking-wider">RFQ DESK</h2>
+            <span className="text-[10px] sm:text-[11px] text-[#9CA3AF] font-mono">
+              {userQuotes.length} {userQuotes.length === 1 ? 'quote' : 'quotes'}
+              {systemQuotes.length > 0 && ` + ${systemQuotes.length} ref`}
+              {totalPages > 1 && ` • ${currentPage}/${totalPages}`}
             </span>
           </div>
-          <div className="flex items-center gap-4 text-[11px] text-[#9CA3AF] font-mono">
+          <div className="hidden sm:flex items-center gap-4 text-[11px] text-[#9CA3AF] font-mono">
             <span>PVP</span>
             <span className="text-[#4B5563]">|</span>
             <span>&lt;2s FINALITY</span>
@@ -343,35 +343,36 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
 
       {/* Viewing Mode Banner - Dark Theme */}
       {!account && (
-        <div className="px-5 py-2 bg-[#F59E0B]/[0.08] border-y border-[#F59E0B]/20">
-          <span className="text-[11px] font-mono text-[#F59E0B] uppercase tracking-wide">
-            VIEWING MODE — CONNECT WALLET TO EXECUTE RFQs
+        <div className="px-3 sm:px-5 py-2 bg-[#F59E0B]/[0.08] border-y border-[#F59E0B]/20">
+          <span className="text-[10px] sm:text-[11px] font-mono text-[#F59E0B] uppercase tracking-wide">
+            <span className="hidden sm:inline">VIEWING MODE — CONNECT WALLET TO EXECUTE RFQs</span>
+            <span className="sm:hidden">CONNECT WALLET TO FILL QUOTES</span>
           </span>
         </div>
       )}
 
       {/* Wrong Network Banner - Dark Theme */}
       {!isCorrectNetwork && account && (
-        <div className="px-5 py-2 bg-[#F87171]/[0.08] border-y border-[#F87171]/20">
-          <span className="text-[11px] font-mono text-[#F87171] uppercase tracking-wide">
-            WRONG NETWORK • DETECTED CHAIN ID: {chainId} • EXPECTED: 5042002
+        <div className="px-3 sm:px-5 py-2 bg-[#F87171]/[0.08] border-y border-[#F87171]/20">
+          <span className="text-[10px] sm:text-[11px] font-mono text-[#F87171] uppercase tracking-wide">
+            <span className="hidden sm:inline">WRONG NETWORK • DETECTED CHAIN ID: {chainId} • EXPECTED: 5042002</span>
+            <span className="sm:hidden">WRONG NETWORK • SWITCH TO ARC</span>
           </span>
         </div>
       )}
 
       {/* Settlement Info Banner - Dark Theme */}
       {account && isCorrectNetwork && quotes.length > 0 && (
-        <div className="px-5 py-2.5 bg-[#3B82F6]/[0.08] border-y border-[#3B82F6]/20">
-          <div className="flex items-start gap-3">
+        <div className="px-3 sm:px-5 py-2 sm:py-2.5 bg-[#3B82F6]/[0.08] border-y border-[#3B82F6]/20">
+          <div className="flex items-start gap-2 sm:gap-3">
             <span className="text-[#93C5FD] text-sm">ℹ️</span>
             <div className="flex-1 space-y-1">
-              <div className="text-[11px] font-mono font-semibold text-[#93C5FD] uppercase tracking-wide">
-                Two-Step Settlement Process
+              <div className="text-[10px] sm:text-[11px] font-mono font-semibold text-[#93C5FD] uppercase tracking-wide">
+                Two-Step Settlement
               </div>
-              <div className="text-[11px] font-mono text-[#9CA3AF]">
-                1️⃣ Approve tokenIn (you authorize transfer) •
-                2️⃣ Execute settleRFQ() (atomic PVP swap) •
-                ✅ Confirmed by RFQSettled event
+              <div className="text-[10px] sm:text-[11px] font-mono text-[#9CA3AF]">
+                <span className="hidden sm:inline">1️⃣ Approve tokenIn (you authorize transfer) • 2️⃣ Execute settleRFQ() (atomic PVP swap) • ✅ Confirmed by RFQSettled event</span>
+                <span className="sm:hidden">1️⃣ Approve • 2️⃣ Settle • ✅ Confirm</span>
               </div>
             </div>
           </div>
@@ -380,16 +381,16 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
 
       {/* Reference Liquidity Info Banner - Dark Theme */}
       {systemQuotes.length > 0 && (
-        <div className="px-5 py-2.5 bg-[#6B7280]/[0.08] border-y border-[#6B7280]/20">
-          <div className="flex items-start gap-3">
+        <div className="px-3 sm:px-5 py-2 sm:py-2.5 bg-[#6B7280]/[0.08] border-y border-[#6B7280]/20">
+          <div className="flex items-start gap-2 sm:gap-3">
             <span className="text-[#9CA3AF] text-sm">📊</span>
             <div className="flex-1 space-y-1">
-              <div className="text-[11px] font-mono font-semibold text-[#9CA3AF] uppercase tracking-wide">
+              <div className="text-[10px] sm:text-[11px] font-mono font-semibold text-[#9CA3AF] uppercase tracking-wide">
                 Reference Liquidity Available
               </div>
-              <div className="text-[11px] font-mono text-[#6B7280]">
-                Platform-provided quotes (marked "REF") ensure continuous liquidity availability •
-                Backed by real reserves • Settled via same atomic PVP flow as market maker quotes
+              <div className="text-[10px] sm:text-[11px] font-mono text-[#6B7280]">
+                <span className="hidden sm:inline">Platform-provided quotes (marked "REF") ensure continuous liquidity availability • Backed by real reserves • Settled via same atomic PVP flow as market maker quotes</span>
+                <span className="sm:hidden">Platform quotes marked "REF" • Always available</span>
               </div>
             </div>
           </div>
@@ -398,16 +399,17 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
 
       {/* Institutional Data Table - Dark Theme */}
       {quotes.length === 0 ? (
-        <div className="text-center py-16 bg-[#111827]">
-          <p className="text-[#9CA3AF] text-[14px] font-mono uppercase tracking-wide">NO ACTIVE QUOTES AVAILABLE</p>
-          <p className="text-[#6B7280] text-[12px] mt-1 font-mono">
-            MARKET MAKER QUOTES WILL APPEAR HERE • REFERENCE LIQUIDITY AVAILABLE SOON
+        <div className="text-center py-12 sm:py-16 bg-[#111827] px-4">
+          <p className="text-[#9CA3AF] text-[12px] sm:text-[14px] font-mono uppercase tracking-wide">NO ACTIVE QUOTES AVAILABLE</p>
+          <p className="text-[#6B7280] text-[11px] sm:text-[12px] mt-1 font-mono">
+            <span className="hidden sm:inline">MARKET MAKER QUOTES WILL APPEAR HERE • REFERENCE LIQUIDITY AVAILABLE SOON</span>
+            <span className="sm:hidden">QUOTES WILL APPEAR HERE</span>
           </p>
         </div>
       ) : (
         <div>
-          {/* Table Header - Dark Theme */}
-          <div className="border-b border-[#374151] px-5 py-2 bg-[#111827]">
+          {/* Table Header - Desktop Only */}
+          <div className="hidden md:block border-b border-[#374151] px-5 py-2 bg-[#111827]">
             <div className="flex items-center text-[11px] font-mono text-[#9CA3AF] uppercase tracking-wide">
               <span className="w-20">MAKER</span>
               <span className="w-12">T</span>
@@ -437,7 +439,7 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
               return (
                 <div
                   key={idx}
-                  className={`flex items-center px-5 py-2.5 transition-colors duration-150 ${
+                  className={`transition-colors duration-150 ${
                     isSystemQuote
                       ? 'bg-[#1F2937]/30 border-l-2 border-l-[#6B7280]'
                       : isExpiring
@@ -447,74 +449,76 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
                       : 'bg-[#0B0F14] hover:bg-[#161E2E]'
                   }`}
                 >
-                  {/* Maker Address - Dark Theme */}
-                  <span className="w-20 text-[11px] font-mono text-[#9CA3AF]">
-                    {isSystemQuote ? 'PLATFORM' : quote.rfq.maker.slice(0, 8)}
-                  </span>
-
-                  {/* Type Pills - Dark Theme */}
-                  <div className="w-12">
-                    {isSystemQuote ? (
-                      <span className="inline-flex items-center px-2 py-0.5 bg-[#6B7280]/[0.12] border border-[#6B7280]/30 text-[#9CA3AF] text-[9px] font-bold rounded uppercase tracking-wide" title="Reference liquidity provided by the platform for immediate settlement">
-                        REF
+                  {/* Mobile Card Layout */}
+                  <div className="md:hidden px-3 py-3 space-y-3">
+                    {/* Header Row */}
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        {/* Type Pill */}
+                        {isSystemQuote ? (
+                          <span className="inline-flex items-center px-2 py-0.5 bg-[#6B7280]/[0.12] border border-[#6B7280]/30 text-[#9CA3AF] text-[9px] font-bold rounded uppercase tracking-wide">
+                            REF
+                          </span>
+                        ) : isRestricted ? (
+                          <span className="inline-flex items-center px-2 py-0.5 bg-[#F59E0B]/[0.12] border border-[#F59E0B]/30 text-[#FBBF24] text-[10px] font-semibold rounded">
+                            🔒
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 bg-[#22C55E]/[0.12] border border-[#22C55E]/30 text-[#34D399] text-[10px] font-semibold rounded">
+                            🌐
+                          </span>
+                        )}
+                        {/* Pair */}
+                        <span className="text-[13px] font-mono font-semibold text-[#E5E7EB]">
+                          {tokenInSymbol}/{tokenOutSymbol}
+                        </span>
+                      </div>
+                      {/* TTL */}
+                      <span className={`text-[11px] font-mono ${
+                        isExpiring ? 'text-[#FBBF24] font-bold' : 'text-[#9CA3AF]'
+                      }`}>
+                        {timeLeft}s
                       </span>
-                    ) : isRestricted ? (
-                      <span className="inline-flex items-center px-2 py-0.5 bg-[#F59E0B]/[0.12] border border-[#F59E0B]/30 text-[#FBBF24] text-[10px] font-semibold rounded" title="Private RFQ - Restricted Access">
-                        🔒
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-2 py-0.5 bg-[#22C55E]/[0.12] border border-[#22C55E]/30 text-[#34D399] text-[10px] font-semibold rounded" title="Public RFQ - Anyone Can Fill">
-                        🌐
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Pair - Dark Theme */}
-                  <span className="w-28 text-[12px] font-mono font-semibold text-[#E5E7EB]">
-                    {tokenInSymbol}/{tokenOutSymbol}
-                  </span>
-
-                  {/* YOU PAY (Debit) - Dark Theme */}
-                  <div className="w-32 text-right font-mono">
-                    <div className="text-[14px] font-bold text-[#F87171]">
-                      {formatUnits(quote.rfq.amountIn, 6)}
                     </div>
-                    <div className="text-[11px] text-[#6B7280]">{tokenInSymbol}</div>
-                  </div>
 
-                  {/* YOU RECEIVE (Credit) - Dark Theme */}
-                  <div className="w-32 text-right font-mono">
-                    <div className="text-[14px] font-bold text-[#34D399]">
-                      {formatUnits(quote.rfq.amountOut, 6)}
+                    {/* Amounts Row */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <div className="text-[10px] text-[#9CA3AF] uppercase mb-1">You Pay</div>
+                        <div className="text-[14px] font-bold text-[#F87171] font-mono">{formatUnits(quote.rfq.amountIn, 6)}</div>
+                        <div className="text-[10px] text-[#6B7280]">{tokenInSymbol}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-[#9CA3AF] uppercase mb-1">You Get</div>
+                        <div className="text-[14px] font-bold text-[#34D399] font-mono">{formatUnits(quote.rfq.amountOut, 6)}</div>
+                        <div className="text-[10px] text-[#6B7280]">{tokenOutSymbol}</div>
+                      </div>
                     </div>
-                    <div className="text-[11px] text-[#6B7280]">{tokenOutSymbol}</div>
-                  </div>
 
-                  {/* RATE (Neutral) - Dark Theme */}
-                  <div className="w-20 text-right font-mono">
-                    <div className="text-[12px] text-[#93C5FD]">
-                      {(Number(formatUnits(quote.rfq.amountOut, 6)) / Number(formatUnits(quote.rfq.amountIn, 6))).toFixed(4)}
+                    {/* Rate and Maker Row */}
+                    <div className="flex items-center justify-between text-[10px]">
+                      <div>
+                        <span className="text-[#9CA3AF]">Rate: </span>
+                        <span className="text-[#93C5FD] font-mono font-semibold">
+                          {(Number(formatUnits(quote.rfq.amountOut, 6)) / Number(formatUnits(quote.rfq.amountIn, 6))).toFixed(4)}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[#9CA3AF]">Maker: </span>
+                        <span className="text-[#9CA3AF] font-mono">
+                          {isSystemQuote ? 'PLATFORM' : quote.rfq.maker.slice(0, 6)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* TTL (Time to Live) - Dark Theme */}
-                  <span className={`w-16 text-right text-[11px] font-mono ${
-                    isExpiring ? 'text-[#FBBF24] font-bold' : 'text-[#9CA3AF]'
-                  }`}>
-                    {timeLeft}s
-                  </span>
-
-                  {/* Action Button - Dark Theme */}
-                  <div className="w-24 flex justify-end">
+                    {/* Action Button */}
                     <button
                       onClick={() => {
-                        // If wallet not connected, show message and open wallet modal
                         if (!account) {
                           alert('Please connect your wallet to fill this quote')
                           setIsWalletModalOpen(true)
                           return
                         }
-                        // Otherwise proceed with accepting quote
                         handleAcceptQuote(quote)
                       }}
                       disabled={
@@ -524,39 +528,141 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
                         isSelfQuote ||
                         (isRestricted && !canAccept)
                       }
-                      className={`px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-[0.5px] rounded transition-all duration-150 ${
+                      className={`w-full py-2 text-[11px] font-mono font-semibold uppercase tracking-[0.5px] rounded transition-all duration-150 ${
                         isSelfQuote
                           ? 'bg-[#374151] text-[#9CA3AF] cursor-not-allowed'
                           : isLoading || timeLeft === 0 || (account && !isCorrectNetwork) || (isRestricted && !canAccept)
                           ? 'bg-[#1F2937] text-[#6B7280] cursor-not-allowed'
                           : 'bg-[#3B82F6] text-white hover:bg-[#2563EB] active:bg-[#1D4ED8] active:scale-[0.98]'
                       }`}
-                      title={
-                        !account
-                          ? 'Click to connect wallet'
-                          : !isCorrectNetwork
-                          ? 'Switch to Arc Testnet'
-                          : isSelfQuote
-                          ? 'You cannot fill your own RFQ'
-                          : isRestricted && !canAccept
-                          ? 'Private quote - unauthorized'
-                          : ''
-                      }
                     >
                       {selectedQuote === quote && isApproving
-                        ? '1/2'
+                        ? 'APPROVING 1/2'
                         : selectedQuote === quote && isSettling
-                        ? '2/2'
+                        ? 'SETTLING 2/2'
                         : timeLeft === 0
-                        ? 'EXP'
+                        ? 'EXPIRED'
                         : (account && !isCorrectNetwork)
-                        ? 'NET'
+                        ? 'WRONG NETWORK'
                         : isSelfQuote
                         ? 'YOUR QUOTE'
                         : isRestricted && !canAccept
-                        ? 'PRIV'
-                        : 'FILL'}
+                        ? 'PRIVATE'
+                        : 'FILL QUOTE'}
                     </button>
+                  </div>
+
+                  {/* Desktop Table Layout */}
+                  <div className="hidden md:flex items-center px-5 py-2.5">
+                    {/* Maker Address */}
+                    <span className="w-20 text-[11px] font-mono text-[#9CA3AF]">
+                      {isSystemQuote ? 'PLATFORM' : quote.rfq.maker.slice(0, 8)}
+                    </span>
+
+                    {/* Type Pills */}
+                    <div className="w-12">
+                      {isSystemQuote ? (
+                        <span className="inline-flex items-center px-2 py-0.5 bg-[#6B7280]/[0.12] border border-[#6B7280]/30 text-[#9CA3AF] text-[9px] font-bold rounded uppercase tracking-wide" title="Reference liquidity provided by the platform for immediate settlement">
+                          REF
+                        </span>
+                      ) : isRestricted ? (
+                        <span className="inline-flex items-center px-2 py-0.5 bg-[#F59E0B]/[0.12] border border-[#F59E0B]/30 text-[#FBBF24] text-[10px] font-semibold rounded" title="Private RFQ - Restricted Access">
+                          🔒
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2 py-0.5 bg-[#22C55E]/[0.12] border border-[#22C55E]/30 text-[#34D399] text-[10px] font-semibold rounded" title="Public RFQ - Anyone Can Fill">
+                          🌐
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Pair */}
+                    <span className="w-28 text-[12px] font-mono font-semibold text-[#E5E7EB]">
+                      {tokenInSymbol}/{tokenOutSymbol}
+                    </span>
+
+                    {/* YOU PAY (Debit) */}
+                    <div className="w-32 text-right font-mono">
+                      <div className="text-[14px] font-bold text-[#F87171]">
+                        {formatUnits(quote.rfq.amountIn, 6)}
+                      </div>
+                      <div className="text-[11px] text-[#6B7280]">{tokenInSymbol}</div>
+                    </div>
+
+                    {/* YOU RECEIVE (Credit) */}
+                    <div className="w-32 text-right font-mono">
+                      <div className="text-[14px] font-bold text-[#34D399]">
+                        {formatUnits(quote.rfq.amountOut, 6)}
+                      </div>
+                      <div className="text-[11px] text-[#6B7280]">{tokenOutSymbol}</div>
+                    </div>
+
+                    {/* RATE */}
+                    <div className="w-20 text-right font-mono">
+                      <div className="text-[12px] text-[#93C5FD]">
+                        {(Number(formatUnits(quote.rfq.amountOut, 6)) / Number(formatUnits(quote.rfq.amountIn, 6))).toFixed(4)}
+                      </div>
+                    </div>
+
+                    {/* TTL */}
+                    <span className={`w-16 text-right text-[11px] font-mono ${
+                      isExpiring ? 'text-[#FBBF24] font-bold' : 'text-[#9CA3AF]'
+                    }`}>
+                      {timeLeft}s
+                    </span>
+
+                    {/* Action Button */}
+                    <div className="w-24 flex justify-end">
+                      <button
+                        onClick={() => {
+                          if (!account) {
+                            alert('Please connect your wallet to fill this quote')
+                            setIsWalletModalOpen(true)
+                            return
+                          }
+                          handleAcceptQuote(quote)
+                        }}
+                        disabled={
+                          isLoading ||
+                          timeLeft === 0 ||
+                          (account && !isCorrectNetwork) ||
+                          isSelfQuote ||
+                          (isRestricted && !canAccept)
+                        }
+                        className={`px-3 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-[0.5px] rounded transition-all duration-150 ${
+                          isSelfQuote
+                            ? 'bg-[#374151] text-[#9CA3AF] cursor-not-allowed'
+                            : isLoading || timeLeft === 0 || (account && !isCorrectNetwork) || (isRestricted && !canAccept)
+                            ? 'bg-[#1F2937] text-[#6B7280] cursor-not-allowed'
+                            : 'bg-[#3B82F6] text-white hover:bg-[#2563EB] active:bg-[#1D4ED8] active:scale-[0.98]'
+                        }`}
+                        title={
+                          !account
+                            ? 'Click to connect wallet'
+                            : !isCorrectNetwork
+                            ? 'Switch to Arc Testnet'
+                            : isSelfQuote
+                            ? 'You cannot fill your own RFQ'
+                            : isRestricted && !canAccept
+                            ? 'Private quote - unauthorized'
+                            : ''
+                        }
+                      >
+                        {selectedQuote === quote && isApproving
+                          ? '1/2'
+                          : selectedQuote === quote && isSettling
+                          ? '2/2'
+                          : timeLeft === 0
+                          ? 'EXP'
+                          : (account && !isCorrectNetwork)
+                          ? 'NET'
+                          : isSelfQuote
+                          ? 'YOUR QUOTE'
+                          : isRestricted && !canAccept
+                          ? 'PRIV'
+                          : 'FILL'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )
@@ -565,17 +671,18 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
 
           {/* Pagination Controls - Dark Theme */}
           {totalPages > 1 && (
-            <div className="border-t border-[#374151] px-5 py-3 bg-[#111827]">
-              <div className="flex items-center justify-between">
-                <div className="text-[11px] font-mono text-[#9CA3AF]">
-                  Page {currentPage} of {totalPages} • Showing {startIndex + 1}-{Math.min(endIndex, userQuotes.length)} of {userQuotes.length} market quotes
-                  {systemQuotes.length > 0 && ` (+ ${systemQuotes.length} reference)`}
+            <div className="border-t border-[#374151] px-3 sm:px-5 py-2.5 sm:py-3 bg-[#111827]">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                <div className="text-[10px] sm:text-[11px] font-mono text-[#9CA3AF] text-center sm:text-left">
+                  <span className="hidden sm:inline">Page {currentPage} of {totalPages} • Showing {startIndex + 1}-{Math.min(endIndex, userQuotes.length)} of {userQuotes.length} market quotes
+                  {systemQuotes.length > 0 && ` (+ ${systemQuotes.length} reference)`}</span>
+                  <span className="sm:hidden">Page {currentPage}/{totalPages}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <button
                     onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                     disabled={currentPage === 1}
-                    className={`px-3 py-1.5 text-[11px] font-mono uppercase tracking-wide rounded border transition-colors ${
+                    className={`px-4 sm:px-3 py-1.5 text-[10px] sm:text-[11px] font-mono uppercase tracking-wide rounded border transition-colors ${
                       currentPage === 1
                         ? 'bg-[#0B0F14] text-[#6B7280] border-[#1F2937] cursor-not-allowed'
                         : 'bg-[#161E2E] text-[#E5E7EB] border-[#374151] hover:border-[#4B5563]'
@@ -586,7 +693,7 @@ export default function QuoteBoard({ pair }: QuoteBoardProps) {
                   <button
                     onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                     disabled={currentPage === totalPages}
-                    className={`px-3 py-1.5 text-[11px] font-mono uppercase tracking-wide rounded border transition-colors ${
+                    className={`px-4 sm:px-3 py-1.5 text-[10px] sm:text-[11px] font-mono uppercase tracking-wide rounded border transition-colors ${
                       currentPage === totalPages
                         ? 'bg-[#0B0F14] text-[#6B7280] border-[#1F2937] cursor-not-allowed'
                         : 'bg-[#161E2E] text-[#E5E7EB] border-[#374151] hover:border-[#4B5563]'
