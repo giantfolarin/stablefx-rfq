@@ -20,6 +20,17 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
   const { connectWallet } = useWallet()
   const [isConnecting, setIsConnecting] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera
+      const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i
+      return mobileRegex.test(userAgent.toLowerCase())
+    }
+    setIsMobile(checkMobile())
+  }, [])
 
   // Ensure component only renders on client
   useEffect(() => {
@@ -388,6 +399,25 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
   const installedWallets = wallets.filter(w => w.installed)
   const popularWallets = wallets.filter(w => !w.installed)
 
+  // Mobile wallet deep links
+  const openInMetaMaskMobile = () => {
+    const currentUrl = window.location.href
+    const metamaskDeepLink = `https://metamask.app.link/dapp/${window.location.host}${window.location.pathname}`
+    window.location.href = metamaskDeepLink
+  }
+
+  const openInRabbyMobile = () => {
+    const currentUrl = window.location.href
+    const rabbyDeepLink = `https://rabby.io/dapp?url=${encodeURIComponent(currentUrl)}`
+    window.location.href = rabbyDeepLink
+  }
+
+  const openInCoinbaseMobile = () => {
+    const currentUrl = window.location.href
+    const coinbaseDeepLink = `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(currentUrl)}`
+    window.location.href = coinbaseDeepLink
+  }
+
   const modalContent = (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
          onClick={onClose}>
@@ -410,56 +440,147 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
           {/* Left Panel - Wallet List (Scrollable) */}
           <div className="w-full md:w-1/2 md:border-r border-[#374151] flex flex-col flex-1 overflow-hidden">
             <div className="flex-1 overflow-y-auto px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8">
-              {/* Installed Wallets */}
-              {installedWallets.length > 0 && (
-                <div className="mb-4 sm:mb-6">
-                  <h3 className="text-[10px] sm:text-[11px] font-semibold text-[#9CA3AF] uppercase tracking-[1px] mb-3 sm:mb-4">Installed</h3>
-                  <div className="space-y-2">
-                    {installedWallets.map((wallet) => (
-                      <button
-                        key={wallet.name}
-                        onClick={wallet.connect}
-                        disabled={isConnecting}
-                        className="w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 bg-[#161E2E] border border-[#374151] hover:bg-[#1F2937] hover:border-[#4B5563] rounded-lg sm:rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
-                      >
-                        {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') ? (
-                          <img src={wallet.icon} alt={wallet.name} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex-shrink-0" />
-                        ) : (
-                          <span className="text-xl sm:text-2xl flex-shrink-0">{wallet.icon}</span>
-                        )}
-                        <span className="text-[#E5E7EB] font-medium text-[13px] sm:text-[14px]">{wallet.name}</span>
-                      </button>
-                    ))}
+              {isMobile ? (
+                // Mobile Wallet Options
+                <div className="space-y-4">
+                  <div className="bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-lg p-3 mb-4">
+                    <p className="text-[12px] text-[#93C5FD] font-medium">
+                      📱 To connect on mobile, open this site in your wallet app's browser
+                    </p>
                   </div>
-                </div>
-              )}
 
-              {/* Popular Wallets (Not Installed) */}
-              {popularWallets.length > 0 && (
-                <div>
-                  <h3 className="text-[10px] sm:text-[11px] font-semibold text-[#6B7280] uppercase tracking-[1px] mb-3 sm:mb-4">Popular</h3>
-                  <div className="space-y-2">
-                    {popularWallets.map((wallet) => (
+                  <div>
+                    <h3 className="text-[10px] sm:text-[11px] font-semibold text-[#9CA3AF] uppercase tracking-[1px] mb-3">Open in Wallet</h3>
+                    <div className="space-y-2">
+                      <button
+                        onClick={openInMetaMaskMobile}
+                        className="w-full flex items-center justify-between gap-3 px-3 py-3 bg-[#161E2E] border border-[#374151] hover:bg-[#1F2937] hover:border-[#4B5563] rounded-lg transition-all duration-150 active:scale-[0.98]"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl flex-shrink-0">🦊</span>
+                          <div className="text-left">
+                            <div className="text-[#E5E7EB] font-medium text-[13px]">MetaMask</div>
+                            <div className="text-[#6B7280] text-[11px]">Open in MetaMask app</div>
+                          </div>
+                        </div>
+                        <span className="text-[#3B82F6] text-[11px] font-medium">Open →</span>
+                      </button>
+
+                      <button
+                        onClick={openInCoinbaseMobile}
+                        className="w-full flex items-center justify-between gap-3 px-3 py-3 bg-[#161E2E] border border-[#374151] hover:bg-[#1F2937] hover:border-[#4B5563] rounded-lg transition-all duration-150 active:scale-[0.98]"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl flex-shrink-0">🔵</span>
+                          <div className="text-left">
+                            <div className="text-[#E5E7EB] font-medium text-[13px]">Coinbase Wallet</div>
+                            <div className="text-[#6B7280] text-[11px]">Open in Coinbase app</div>
+                          </div>
+                        </div>
+                        <span className="text-[#3B82F6] text-[11px] font-medium">Open →</span>
+                      </button>
+
+                      <button
+                        onClick={openInRabbyMobile}
+                        className="w-full flex items-center justify-between gap-3 px-3 py-3 bg-[#161E2E] border border-[#374151] hover:bg-[#1F2937] hover:border-[#4B5563] rounded-lg transition-all duration-150 active:scale-[0.98]"
+                      >
+                        <div className="flex items-center gap-3">
+                          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSIxMiIgZmlsbD0idXJsKCNncmFkKSIvPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiB4MT0iMCIgeTE9IjAiIHgyPSI0OCIgeTI9IjQ4Ij4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6Izc4OEFGRjtzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojOEM2REZGO3N0b3Atb3BhY2l0eToxIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTM1IDE5QzM1IDE1LjcgMzIuMyAxMyAyOSAxM0MyOCAxMiAxOSAxMyAxNSAxN0MxMCAyMSAxMCAyNyAxNSAzMEMyMCAzMyAyOCAzMyAzMSAzMUMzNCAyOSAzNSAyNyAzNSAyNFYxOVoiIGZpbGw9IndoaXRlIi8+CiAgPGNpcmNsZSBjeD0iMjgiIGN5PSIxOSIgcj0iMi41IiBmaWxsPSIjNzg4QUZGIi8+CiAgPHBhdGggZD0iTTE5IDIyQzE5IDIyIDIwIDI1IDI0IDI1QzI4IDI1IDI5IDIyIDI5IDIyIiBzdHJva2U9IiM3ODhBRkYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+Cjwvc3ZnPg==" alt="Rabby" className="w-7 h-7 rounded-lg flex-shrink-0" />
+                          <div className="text-left">
+                            <div className="text-[#E5E7EB] font-medium text-[13px]">Rabby Wallet</div>
+                            <div className="text-[#6B7280] text-[11px]">Open in Rabby app</div>
+                          </div>
+                        </div>
+                        <span className="text-[#3B82F6] text-[11px] font-medium">Open →</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-[#374151]">
+                    <h3 className="text-[10px] font-semibold text-[#6B7280] uppercase tracking-[1px] mb-3">Don't have a wallet?</h3>
+                    <div className="space-y-2">
                       <a
-                        key={wallet.name}
-                        href={getWalletInstallUrl(wallet.name)}
+                        href="https://metamask.io/download/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-[#1F2937]/50 border border-[#1F2937] hover:border-[#374151] rounded-lg sm:rounded-xl transition-all duration-150 group active:scale-[0.98]"
+                        className="w-full flex items-center justify-between px-3 py-2.5 bg-[#1F2937]/50 border border-[#1F2937] hover:border-[#374151] rounded-lg transition-all group"
                       >
-                        <div className="flex items-center gap-3 sm:gap-4">
-                          {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') ? (
-                            <img src={wallet.icon} alt={wallet.name} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />
-                          ) : (
-                            <span className="text-xl sm:text-2xl opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0">{wallet.icon}</span>
-                          )}
-                          <span className="text-[#9CA3AF] font-medium text-[13px] sm:text-[14px]">{wallet.name}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg opacity-50 group-hover:opacity-80">🦊</span>
+                          <span className="text-[#9CA3AF] text-[13px]">Get MetaMask</span>
                         </div>
-                        <span className="text-[10px] sm:text-[11px] text-[#6B7280] group-hover:text-[#93C5FD] transition-colors font-medium flex-shrink-0">Get →</span>
+                        <span className="text-[10px] text-[#6B7280] group-hover:text-[#93C5FD]">Install →</span>
                       </a>
-                    ))}
+                      <a
+                        href="https://www.coinbase.com/wallet"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-between px-3 py-2.5 bg-[#1F2937]/50 border border-[#1F2937] hover:border-[#374151] rounded-lg transition-all group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg opacity-50 group-hover:opacity-80">🔵</span>
+                          <span className="text-[#9CA3AF] text-[13px]">Get Coinbase Wallet</span>
+                        </div>
+                        <span className="text-[10px] text-[#6B7280] group-hover:text-[#93C5FD]">Install →</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
+              ) : (
+                // Desktop Wallet Options
+                <>
+                  {/* Installed Wallets */}
+                  {installedWallets.length > 0 && (
+                    <div className="mb-4 sm:mb-6">
+                      <h3 className="text-[10px] sm:text-[11px] font-semibold text-[#9CA3AF] uppercase tracking-[1px] mb-3 sm:mb-4">Installed</h3>
+                      <div className="space-y-2">
+                        {installedWallets.map((wallet) => (
+                          <button
+                            key={wallet.name}
+                            onClick={wallet.connect}
+                            disabled={isConnecting}
+                            className="w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 bg-[#161E2E] border border-[#374151] hover:bg-[#1F2937] hover:border-[#4B5563] rounded-lg sm:rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                          >
+                            {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') ? (
+                              <img src={wallet.icon} alt={wallet.name} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex-shrink-0" />
+                            ) : (
+                              <span className="text-xl sm:text-2xl flex-shrink-0">{wallet.icon}</span>
+                            )}
+                            <span className="text-[#E5E7EB] font-medium text-[13px] sm:text-[14px]">{wallet.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Popular Wallets (Not Installed) */}
+                  {popularWallets.length > 0 && (
+                    <div>
+                      <h3 className="text-[10px] sm:text-[11px] font-semibold text-[#6B7280] uppercase tracking-[1px] mb-3 sm:mb-4">Popular</h3>
+                      <div className="space-y-2">
+                        {popularWallets.map((wallet) => (
+                          <a
+                            key={wallet.name}
+                            href={getWalletInstallUrl(wallet.name)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-[#1F2937]/50 border border-[#1F2937] hover:border-[#374151] rounded-lg sm:rounded-xl transition-all duration-150 group active:scale-[0.98]"
+                          >
+                            <div className="flex items-center gap-3 sm:gap-4">
+                              {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') ? (
+                                <img src={wallet.icon} alt={wallet.name} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />
+                              ) : (
+                                <span className="text-xl sm:text-2xl opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0">{wallet.icon}</span>
+                              )}
+                              <span className="text-[#9CA3AF] font-medium text-[13px] sm:text-[14px]">{wallet.name}</span>
+                            </div>
+                            <span className="text-[10px] sm:text-[11px] text-[#6B7280] group-hover:text-[#93C5FD] transition-colors font-medium flex-shrink-0">Get →</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
