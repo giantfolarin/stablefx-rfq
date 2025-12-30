@@ -389,45 +389,45 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
   const popularWallets = wallets.filter(w => !w.installed)
 
   const modalContent = (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm"
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
          onClick={onClose}>
-      <div className="bg-[#111827] border border-[#374151] rounded-2xl shadow-2xl max-w-4xl w-full mx-4 overflow-hidden"
+      <div className="bg-[#111827] border border-[#374151] rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] sm:max-h-[80vh] overflow-hidden flex flex-col"
            onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-6 border-b border-[#374151] bg-[#161E2E]">
-          <h2 className="text-[20px] font-bold text-[#E5E7EB]">Connect a Wallet</h2>
+        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b border-[#374151] bg-[#161E2E] flex-shrink-0">
+          <h2 className="text-[16px] sm:text-[18px] md:text-[20px] font-bold text-[#E5E7EB]">Connect Wallet</h2>
           <button
             onClick={onClose}
-            className="text-[#9CA3AF] hover:text-[#E5E7EB] transition-colors p-2"
+            className="text-[#9CA3AF] hover:text-[#E5E7EB] transition-colors p-1.5 sm:p-2"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="flex" style={{ maxHeight: '70vh' }}>
+        <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
           {/* Left Panel - Wallet List (Scrollable) */}
-          <div className="w-1/2 border-r border-[#374151] flex flex-col">
-            <div className="flex-1 overflow-y-auto px-8 py-8" style={{ maxHeight: '60vh' }}>
+          <div className="w-full md:w-1/2 md:border-r border-[#374151] flex flex-col flex-1 overflow-hidden">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8">
               {/* Installed Wallets */}
               {installedWallets.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="text-[11px] font-semibold text-[#9CA3AF] uppercase tracking-[1px] mb-4">Installed</h3>
+                <div className="mb-4 sm:mb-6">
+                  <h3 className="text-[10px] sm:text-[11px] font-semibold text-[#9CA3AF] uppercase tracking-[1px] mb-3 sm:mb-4">Installed</h3>
                   <div className="space-y-2">
                     {installedWallets.map((wallet) => (
                       <button
                         key={wallet.name}
                         onClick={wallet.connect}
                         disabled={isConnecting}
-                        className="w-full flex items-center gap-4 px-4 py-3 bg-[#161E2E] border border-[#374151] hover:bg-[#1F2937] hover:border-[#4B5563] rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 bg-[#161E2E] border border-[#374151] hover:bg-[#1F2937] hover:border-[#4B5563] rounded-lg sm:rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
                       >
                         {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') ? (
-                          <img src={wallet.icon} alt={wallet.name} className="w-8 h-8 rounded-lg" />
+                          <img src={wallet.icon} alt={wallet.name} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex-shrink-0" />
                         ) : (
-                          <span className="text-2xl">{wallet.icon}</span>
+                          <span className="text-xl sm:text-2xl flex-shrink-0">{wallet.icon}</span>
                         )}
-                        <span className="text-[#E5E7EB] font-medium text-[14px]">{wallet.name}</span>
+                        <span className="text-[#E5E7EB] font-medium text-[13px] sm:text-[14px]">{wallet.name}</span>
                       </button>
                     ))}
                   </div>
@@ -437,7 +437,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
               {/* Popular Wallets (Not Installed) */}
               {popularWallets.length > 0 && (
                 <div>
-                  <h3 className="text-[11px] font-semibold text-[#6B7280] uppercase tracking-[1px] mb-4">Popular</h3>
+                  <h3 className="text-[10px] sm:text-[11px] font-semibold text-[#6B7280] uppercase tracking-[1px] mb-3 sm:mb-4">Popular</h3>
                   <div className="space-y-2">
                     {popularWallets.map((wallet) => (
                       <a
@@ -445,17 +445,17 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
                         href={getWalletInstallUrl(wallet.name)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full flex items-center justify-between px-4 py-3 bg-[#1F2937]/50 border border-[#1F2937] hover:border-[#374151] rounded-xl transition-all duration-150 group"
+                        className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-[#1F2937]/50 border border-[#1F2937] hover:border-[#374151] rounded-lg sm:rounded-xl transition-all duration-150 group active:scale-[0.98]"
                       >
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3 sm:gap-4">
                           {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') ? (
-                            <img src={wallet.icon} alt={wallet.name} className="w-8 h-8 rounded-lg opacity-50 group-hover:opacity-80 transition-opacity" />
+                            <img src={wallet.icon} alt={wallet.name} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />
                           ) : (
-                            <span className="text-2xl opacity-50 group-hover:opacity-80 transition-opacity">{wallet.icon}</span>
+                            <span className="text-xl sm:text-2xl opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0">{wallet.icon}</span>
                           )}
-                          <span className="text-[#9CA3AF] font-medium text-[14px]">{wallet.name}</span>
+                          <span className="text-[#9CA3AF] font-medium text-[13px] sm:text-[14px]">{wallet.name}</span>
                         </div>
-                        <span className="text-[11px] text-[#6B7280] group-hover:text-[#93C5FD] transition-colors font-medium">Get →</span>
+                        <span className="text-[10px] sm:text-[11px] text-[#6B7280] group-hover:text-[#93C5FD] transition-colors font-medium flex-shrink-0">Get →</span>
                       </a>
                     ))}
                   </div>
@@ -464,48 +464,48 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
             </div>
           </div>
 
-          {/* Right Panel - Information */}
-          <div className="w-1/2 p-8 bg-[#161E2E]/50">
-            <h3 className="text-[20px] font-bold text-[#E5E7EB] mb-6 tracking-tight">What is a Wallet?</h3>
+          {/* Right Panel - Information (Hidden on mobile) */}
+          <div className="hidden md:flex md:w-1/2 p-6 lg:p-8 bg-[#161E2E]/50 flex-col">
+            <h3 className="text-[18px] lg:text-[20px] font-bold text-[#E5E7EB] mb-4 lg:mb-6 tracking-tight">What is a Wallet?</h3>
 
-            <div className="space-y-6">
+            <div className="space-y-4 lg:space-y-6">
               {/* Info Block 1 */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-[#3B82F6] rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex gap-3 lg:gap-4">
+                <div className="flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-[#3B82F6] rounded-xl flex items-center justify-center">
+                  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-[#E5E7EB] font-semibold mb-2 text-[14px]">A Home for your Digital Assets</h4>
-                  <p className="text-[#9CA3AF] text-[14px] leading-relaxed">
+                  <h4 className="text-[#E5E7EB] font-semibold mb-1.5 lg:mb-2 text-[13px] lg:text-[14px]">A Home for your Digital Assets</h4>
+                  <p className="text-[#9CA3AF] text-[13px] lg:text-[14px] leading-relaxed">
                     Wallets are used to send, receive, store, and display digital assets like stablecoins and tokens.
                   </p>
                 </div>
               </div>
 
               {/* Info Block 2 */}
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-[#3B82F6] rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex gap-3 lg:gap-4">
+                <div className="flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-[#3B82F6] rounded-xl flex items-center justify-center">
+                  <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-[#E5E7EB] font-semibold mb-2 text-[14px]">A New Way to Log In</h4>
-                  <p className="text-[#9CA3AF] text-[14px] leading-relaxed">
+                  <h4 className="text-[#E5E7EB] font-semibold mb-1.5 lg:mb-2 text-[13px] lg:text-[14px]">A New Way to Log In</h4>
+                  <p className="text-[#9CA3AF] text-[13px] lg:text-[14px] leading-relaxed">
                     Instead of creating new accounts and passwords on every website, just connect your wallet.
                   </p>
                 </div>
               </div>
 
               {/* Get a Wallet Links */}
-              <div className="pt-6 flex gap-3">
+              <div className="pt-4 lg:pt-6 flex gap-2 lg:gap-3">
                 <a
                   href="https://ethereum.org/en/wallets/find-wallet/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-6 py-3 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold text-[14px] rounded-xl transition-all duration-150 hover:shadow-lg hover:shadow-[#3B82F6]/20"
+                  className="inline-block px-4 lg:px-6 py-2.5 lg:py-3 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold text-[13px] lg:text-[14px] rounded-xl transition-all duration-150 hover:shadow-lg hover:shadow-[#3B82F6]/20"
                 >
                   Get a Wallet
                 </a>
@@ -513,7 +513,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
                   href="https://ethereum.org/en/wallets/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-6 py-3 text-[#93C5FD] hover:text-[#BFDBFE] font-semibold text-[14px] transition-colors hover:bg-[#3B82F6]/10 rounded-xl underline"
+                  className="inline-block px-4 lg:px-6 py-2.5 lg:py-3 text-[#93C5FD] hover:text-[#BFDBFE] font-semibold text-[13px] lg:text-[14px] transition-colors hover:bg-[#3B82F6]/10 rounded-xl underline"
                 >
                   Learn More
                 </a>
@@ -523,13 +523,15 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-4 bg-[#0B0F14] border-t border-[#374151]">
-          <p className="text-[11px] text-[#6B7280] text-center font-mono">
-            Institutional RFQ Trading on Arc L1 • USDC-Native Gas • PVP Settlement
+        <div className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-[#0B0F14] border-t border-[#374151] flex-shrink-0">
+          <p className="text-[10px] sm:text-[11px] text-[#6B7280] text-center font-mono">
+            <span className="hidden sm:inline">Institutional RFQ Trading on Arc L1 • USDC-Native Gas • PVP Settlement</span>
+            <span className="sm:hidden">RFQ Trading on Arc L1</span>
           </p>
           {/* DEBUG: MetaMask Detection Status */}
-          <p className="text-[11px] mt-2 text-center font-mono" style={{ color: metamaskDiagnostic.found ? '#34D399' : '#F87171' }}>
-            🦊 MetaMask: {metamaskDiagnostic.found ? '✅ DETECTED' : '❌ NOT DETECTED'} - {metamaskDiagnostic.reason}
+          <p className="text-[10px] sm:text-[11px] mt-1.5 sm:mt-2 text-center font-mono" style={{ color: metamaskDiagnostic.found ? '#34D399' : '#F87171' }}>
+            <span className="hidden sm:inline">🦊 MetaMask: {metamaskDiagnostic.found ? '✅ DETECTED' : '❌ NOT DETECTED'} - {metamaskDiagnostic.reason}</span>
+            <span className="sm:hidden">🦊 {metamaskDiagnostic.found ? '✅' : '❌'} MetaMask</span>
           </p>
         </div>
       </div>
