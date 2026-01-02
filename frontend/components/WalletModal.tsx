@@ -32,9 +32,25 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
     setIsMobile(checkMobile())
   }, [])
 
-  // Ensure component only renders on client
+  // Store EIP-6963 discovered providers
+  const [eip6963Providers, setEip6963Providers] = useState<Map<string, any>>(new Map())
+
+  // Ensure component only renders on client + EIP-6963 provider discovery
   useEffect(() => {
     setMounted(true)
+
+    // EIP-6963: Modern wallet detection standard (solves multi-wallet conflicts)
+    const discoveredProviders = new Map()
+
+    const handleProviderAnnouncement = (event: any) => {
+      const { info, provider } = event.detail
+      console.log('📢 EIP-6963 Provider announced:', info.name, info)
+      discoveredProviders.set(info.uuid, { info, provider })
+      setEip6963Providers(new Map(discoveredProviders))
+    }
+
+    window.addEventListener('eip6963:announceProvider', handleProviderAnnouncement)
+    window.dispatchEvent(new Event('eip6963:requestProvider'))
 
     // DEBUG: Log all detected providers
     if (typeof window !== 'undefined' && window.ethereum) {
@@ -81,12 +97,17 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
 
       // Check custom injection points
       console.log('\nCustom injections:', {
+        'window.MetaMask': !!(window as any).MetaMask,
         'window.okxwallet': !!(window as any).okxwallet,
         'window.phantom.ethereum': !!(window as any).phantom?.ethereum,
         'window.backpack': !!(window as any).backpack,
         'window.keplr': !!(window as any).keplr
       })
       console.log('='.repeat(50))
+    }
+
+    return () => {
+      window.removeEventListener('eip6963:announceProvider', handleProviderAnnouncement)
     }
   }, [])
 
@@ -163,9 +184,20 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
       case 'MetaMask':
         // PRODUCTION FIX: Robust MetaMask detection with multi-wallet conflict resolution
         // Problem: Rabby and other wallets set isMetaMask=true for compatibility
-        // Solution: Check MetaMask's dedicated window.MetaMask object first
+        // Solution: Use EIP-6963 provider discovery (modern standard)
 
-        // Strategy 1: Check window.MetaMask (MetaMask's dedicated injection point)
+        // Strategy 1: EIP-6963 Provider Discovery (BEST - solves all conflicts)
+        // Check if MetaMask announced itself via EIP-6963
+        const eip6963Array = Array.from(eip6963Providers.values())
+        const eip6963MetaMask = eip6963Array.find(({ info }) =>
+          info.name.toLowerCase().includes('metamask')
+        )
+        if (eip6963MetaMask) {
+          console.log('✅ MetaMask found via EIP-6963:', eip6963MetaMask.info.name, eip6963MetaMask.info.rdns)
+          return eip6963MetaMask.provider
+        }
+
+        // Strategy 2: Check window.MetaMask (MetaMask's dedicated injection point)
         // This exists even when Rabby/Backpack override window.ethereum
         const dedicatedMetaMask = (window as any).MetaMask
         if (dedicatedMetaMask && typeof dedicatedMetaMask.request === 'function') {
@@ -173,7 +205,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
           return dedicatedMetaMask
         }
 
-        // Strategy 2: Check providers array for genuine MetaMask
+        // Strategy 3: Check providers array for genuine MetaMask
         const metamaskProvider = ethereumProviders.find((p: any) =>
           p.isMetaMask === true &&
           p.isRabby !== true &&
@@ -187,7 +219,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
           return metamaskProvider
         }
 
-        // Strategy 3: Check window.ethereum directly (only if it's the sole provider AND genuinely MetaMask)
+        // Strategy 4: Check window.ethereum directly (only if it's the sole provider AND genuinely MetaMask)
         if (!window.ethereum?.providers &&
             window.ethereum?.isMetaMask &&
             !window.ethereum?.isRabby &&
@@ -199,6 +231,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
 
         console.warn('❌ MetaMask not detected - ensure extension is installed and enabled')
         console.warn('   If MetaMask is installed, try disabling other wallet extensions temporarily')
+        console.warn('   EIP-6963 providers found:', Array.from(eip6963Providers.values()).map(p => p.info.name))
         return null
 
       case 'OKX Wallet':
