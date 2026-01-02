@@ -161,41 +161,44 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
         return ethereumProviders.find((p: any) => p.isRabby === true) || null
 
       case 'MetaMask':
-        // PRODUCTION FIX: Robust MetaMask detection with Rabby conflict resolution
-        // Rabby can set isMetaMask=true to maintain compatibility, so we MUST filter it out
+        // PRODUCTION FIX: Robust MetaMask detection with multi-wallet conflict resolution
+        // Problem: Rabby and other wallets set isMetaMask=true for compatibility
+        // Solution: Check MetaMask's dedicated window.MetaMask object first
 
-        // Strategy 1: Check providers array for genuine MetaMask
+        // Strategy 1: Check window.MetaMask (MetaMask's dedicated injection point)
+        // This exists even when Rabby/Backpack override window.ethereum
+        const dedicatedMetaMask = (window as any).MetaMask
+        if (dedicatedMetaMask && typeof dedicatedMetaMask.request === 'function') {
+          console.log('✅ MetaMask found at window.MetaMask (dedicated injection)')
+          return dedicatedMetaMask
+        }
+
+        // Strategy 2: Check providers array for genuine MetaMask
         const metamaskProvider = ethereumProviders.find((p: any) =>
           p.isMetaMask === true &&
           p.isRabby !== true &&
           !p._isRabby && // Some versions use _isRabby
-          p.constructor?.name !== 'RabbyProvider' // Check constructor name
+          p.constructor?.name !== 'RabbyProvider' && // Check constructor name
+          p.constructor?.name !== 'BackpackProvider' // Filter Backpack
         )
 
         if (metamaskProvider) {
-          console.log('✅ MetaMask found:', metamaskProvider.constructor?.name || 'MetaMask')
+          console.log('✅ MetaMask found in providers array:', metamaskProvider.constructor?.name || 'MetaMask')
           return metamaskProvider
         }
 
-        // Strategy 2: Check window.ethereum directly (only if it's the sole provider)
+        // Strategy 3: Check window.ethereum directly (only if it's the sole provider AND genuinely MetaMask)
         if (!window.ethereum?.providers &&
             window.ethereum?.isMetaMask &&
             !window.ethereum?.isRabby &&
-            !window.ethereum?._isRabby) {
+            !window.ethereum?._isRabby &&
+            !window.ethereum?.isBackpack) {
           console.log('✅ MetaMask found as single provider')
           return window.ethereum
         }
 
-        // Strategy 3: Check for MetaMask at window.ethereum even if providers array exists
-        // but MetaMask wasn't in the array (edge case for some installations)
-        if (window.ethereum?.isMetaMask &&
-            !window.ethereum?.isRabby &&
-            window.ethereum !== ethereumProviders.find(p => p.isRabby)) {
-          console.log('✅ MetaMask found at window.ethereum (multi-wallet setup)')
-          return window.ethereum
-        }
-
         console.warn('❌ MetaMask not detected - ensure extension is installed and enabled')
+        console.warn('   If MetaMask is installed, try disabling other wallet extensions temporarily')
         return null
 
       case 'OKX Wallet':
