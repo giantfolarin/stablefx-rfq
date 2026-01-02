@@ -68,59 +68,16 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
     window.addEventListener('eip6963:announceProvider', handleProviderAnnouncement)
     window.dispatchEvent(new Event('eip6963:requestProvider'))
 
-    // DEBUG: Log all detected providers
-    if (typeof window !== 'undefined' && window.ethereum) {
-      console.log('🔍 WALLET DETECTION DEBUG:')
+    // DEBUG: Log wallet detection summary (after EIP-6963 discovery completes)
+    setTimeout(() => {
+      console.log('🔍 WALLET DETECTION SUMMARY:')
       console.log('='.repeat(50))
-      console.log('window.ethereum exists:', !!window.ethereum)
-
-      if (window.ethereum.providers) {
-        console.log('Multiple providers detected:', window.ethereum.providers.length)
-        window.ethereum.providers.forEach((p: any, i: number) => {
-          console.log(`\nProvider ${i}:`, {
-            isMetaMask: p.isMetaMask,
-            isRabby: p.isRabby,
-            isCoinbaseWallet: p.isCoinbaseWallet,
-            isOkxWallet: p.isOkxWallet,
-            isPhantom: p.isPhantom,
-            isTrust: p.isTrust
-          })
-        })
-
-        // Specific MetaMask check
-        const metamaskInArray = window.ethereum.providers.find((p: any) =>
-          p.isMetaMask && !p.isRabby
-        )
-        console.log('\n🦊 MetaMask specifically:', metamaskInArray ? '✅ FOUND' : '❌ NOT FOUND')
-        if (metamaskInArray) {
-          console.log('   MetaMask provider:', metamaskInArray)
-        }
-      } else {
-        console.log('Single provider (no providers array)')
-        console.log('window.ethereum:', {
-          isMetaMask: window.ethereum.isMetaMask,
-          isRabby: window.ethereum.isRabby,
-          isCoinbaseWallet: window.ethereum.isCoinbaseWallet
-        })
-
-        // Check if this single provider is MetaMask
-        if (window.ethereum.isMetaMask && !window.ethereum.isRabby) {
-          console.log('🦊 MetaMask: ✅ FOUND (single provider)')
-        } else {
-          console.log('🦊 MetaMask: ❌ NOT FOUND')
-        }
-      }
-
-      // Check custom injection points
-      console.log('\nCustom injections:', {
-        'window.MetaMask': !!(window as any).MetaMask,
-        'window.okxwallet': !!(window as any).okxwallet,
-        'window.phantom.ethereum': !!(window as any).phantom?.ethereum,
-        'window.backpack': !!(window as any).backpack,
-        'window.keplr': !!(window as any).keplr
+      console.log('EIP-6963 providers discovered:', discoveredProviders.size)
+      discoveredProviders.forEach((value) => {
+        console.log(`  ✅ ${value.info.name} (${value.info.rdns})`)
       })
       console.log('='.repeat(50))
-    }
+    }, 100)
 
     return () => {
       window.removeEventListener('eip6963:announceProvider', handleProviderAnnouncement)
