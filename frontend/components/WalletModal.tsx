@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useWallet } from '@/contexts/WalletContext'
 
@@ -80,25 +80,6 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
       window.removeEventListener('eip6963:announceProvider', handleProviderAnnouncement)
     }
   }, [])
-
-  // DEBUG: Visual diagnostic for MetaMask detection
-  // MUST be called before early return (React hooks rule)
-  const metamaskDiagnostic = useMemo(() => {
-    if (typeof window === 'undefined' || !window.ethereum) return { found: false, reason: 'No window.ethereum' }
-
-    const providers = window.ethereum.providers || [window.ethereum]
-    const metamaskProvider = providers.find((p: any) => p.isMetaMask && !p.isRabby)
-
-    if (metamaskProvider) return { found: true, reason: 'Found in providers array' }
-    if (!window.ethereum.providers && window.ethereum.isMetaMask && !window.ethereum.isRabby) {
-      return { found: true, reason: 'Single provider' }
-    }
-
-    return {
-      found: false,
-      reason: `Not found. Providers: ${providers.length}, Flags: ${JSON.stringify(providers.map((p: any) => ({ mm: p.isMetaMask, rb: p.isRabby })))}`
-    }
-  }, [mounted])
 
   if (!isOpen || !mounted) return null
 
@@ -604,11 +585,6 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
           <p className="text-[10px] sm:text-[11px] text-[#6B7280] text-center font-mono">
             <span className="hidden sm:inline">Institutional RFQ Trading on Arc L1 • USDC-Native Gas • PVP Settlement</span>
             <span className="sm:hidden">RFQ Trading on Arc L1</span>
-          </p>
-          {/* DEBUG: MetaMask Detection Status */}
-          <p className="text-[10px] sm:text-[11px] mt-1.5 sm:mt-2 text-center font-mono" style={{ color: metamaskDiagnostic.found ? '#34D399' : '#F87171' }}>
-            <span className="hidden sm:inline">🦊 MetaMask: {metamaskDiagnostic.found ? '✅ DETECTED' : '❌ NOT DETECTED'} - {metamaskDiagnostic.reason}</span>
-            <span className="sm:hidden">🦊 {metamaskDiagnostic.found ? '✅' : '❌'} MetaMask</span>
           </p>
         </div>
       </div>
