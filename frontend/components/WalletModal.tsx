@@ -18,18 +18,15 @@ interface WalletOption {
 
 // Static wallet definitions (outside component - never recreated)
 const WALLET_DEFINITIONS = [
-  {
-    name: 'Rabby Wallet',
-    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSIxMiIgZmlsbD0idXJsKCNncmFkKSIvPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiB4MT0iMCIgeTE9IjAiIHgyPSI0OCIgeTI9IjQ4Ij4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6Izc4OEFGRjtzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojOEM2REZGO3N0b3Atb3BhY2l0eToxIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHBhdGggZD0iTTM1IDE5QzM1IDE1LjcgMzIuMyAxMyAyOSAxM0MyOCAxMiAxOSAxMyAxNSAxN0MxMCAyMSAxMCAyNyAxNSAzMEMyMCAzMyAyOCAzMyAzMSAzMUMzNCAyOSAzNSAyNyAzNSAyNFYxOVoiIGZpbGw9IndoaXRlIi8+CiAgPGNpcmNsZSBjeD0iMjgiIGN5PSIxOSIgcj0iMi41IiBmaWxsPSIjNzg4QUZGIi8+CiAgPHBhdGggZD0iTTE5IDIyQzE5IDIyIDIwIDI1IDI0IDI1QzI4IDI1IDI5IDIyIDI5IDIyIiBzdHJva2U9IiM3ODhBRkYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+Cjwvc3ZnPg=='
-  },
-  { name: 'MetaMask', icon: '🦊' },
-  { name: 'OKX Wallet', icon: '⭕' },
-  { name: 'Phantom', icon: '👻' },
-  { name: 'Coinbase Wallet', icon: '🔵' },
-  { name: 'Rainbow', icon: '🌈' },
-  { name: 'Trust Wallet', icon: '🛡️' },
-  { name: 'Backpack', icon: '🎒' },
-  { name: 'Keplr', icon: '⚛️' }
+  { name: 'Rabby Wallet', icon: '/wallets/Rabby.svg' },
+  { name: 'MetaMask', icon: '/wallets/metamask.svg' },
+  { name: 'OKX Wallet', icon: '/wallets/okx.svg' },
+  { name: 'Phantom', icon: '/wallets/Phantom.svg' },
+  { name: 'Coinbase Wallet', icon: '/wallets/Coinbase.svg' },
+  { name: 'Rainbow', icon: '/wallets/Rainbow.png' },
+  { name: 'Trust Wallet', icon: '/wallets/trustwallet.svg' },
+  { name: 'Backpack', icon: '/wallets/Backpack.svg' },
+  { name: 'Keplr', icon: '/wallets/Keplr.png' }
 ] as const
 
 export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
