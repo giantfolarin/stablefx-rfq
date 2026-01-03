@@ -478,7 +478,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
                             disabled={isConnecting}
                             className="w-full flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-2.5 sm:py-3 bg-[#161E2E] border border-[#374151] hover:bg-[#1F2937] hover:border-[#4B5563] rounded-lg sm:rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
                           >
-                            {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') ? (
+                            {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') || wallet.icon.startsWith('/') ? (
                               <img src={wallet.icon} alt={wallet.name} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex-shrink-0" />
                             ) : (
                               <span className="text-xl sm:text-2xl flex-shrink-0">{wallet.icon}</span>
@@ -504,7 +504,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
                             className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-[#1F2937]/50 border border-[#1F2937] hover:border-[#374151] rounded-lg sm:rounded-xl transition-all duration-150 group active:scale-[0.98]"
                           >
                             <div className="flex items-center gap-3 sm:gap-4">
-                              {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') ? (
+                              {wallet.icon.startsWith('http') || wallet.icon.startsWith('data:') || wallet.icon.startsWith('/') ? (
                                 <img src={wallet.icon} alt={wallet.name} className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0" />
                               ) : (
                                 <span className="text-xl sm:text-2xl opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0">{wallet.icon}</span>
