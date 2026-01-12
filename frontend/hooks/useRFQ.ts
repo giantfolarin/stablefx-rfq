@@ -382,8 +382,27 @@ export function useRFQ() {
         setError('You are not authorized to fill this quote')
         alert('❌ Unauthorized\n\nThis quote was created for a different taker address.\n\nYou cannot fill this quote.')
       } else if (errorMsg.includes('insufficient') || errorMsg.includes('exceeds balance') || errorMsg.includes('transfer amount exceeds')) {
-        setError('Insufficient token balance to complete settlement')
-        alert('❌ Insufficient Balance\n\nYou don\'t have enough tokens in your wallet to complete this trade.\n\nRequired: Check the quote amounts\nPlease add funds to your wallet and try again.')
+        setError('Insufficient token balance - either taker or maker lacks funds')
+
+        const amountInFormatted = (Number(quote.rfq.amountIn) / 1e6).toFixed(2)
+        const amountOutFormatted = (Number(quote.rfq.amountOut) / 1e6).toFixed(2)
+
+        alert(`❌ Insufficient Balance
+
+The settlement failed due to insufficient token balance.
+
+This could mean:
+• You don't have enough tokens to send (check your balance)
+• The MAKER doesn't have enough tokens to send back to you
+
+Quote details:
+• You send: ${amountInFormatted} USDC
+• You receive: ${amountOutFormatted} EURC
+
+✅ Your balance: Check if you have at least ${amountInFormatted} USDC
+❌ If you have enough, the maker likely has insufficient EURC liquidity
+
+Try a different quote or contact the maker.`)
       } else if (errorMsg.includes('user rejected') || errorMsg.includes('user denied')) {
         setError('Transaction rejected by user')
       } else {
