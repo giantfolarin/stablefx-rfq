@@ -374,18 +374,23 @@ export function useRFQ() {
       // Parse other contract revert messages
       if (errorMsg.includes('expired')) {
         setError('Quote expired - settlement deadline passed')
+        alert('❌ Quote Expired\n\nThis quote has passed its settlement deadline.\n\nPlease request a new quote from the maker.')
       } else if (errorMsg.includes('invalid signature')) {
         setError('Invalid maker signature - quote may be malformed')
+        alert('❌ Invalid Signature\n\nThe maker\'s signature is invalid or the quote data was tampered with.')
       } else if (errorMsg.includes('not taker') || errorMsg.includes('unauthorized')) {
         setError('You are not authorized to fill this quote')
-      } else if (errorMsg.includes('insufficient')) {
-        setError('Insufficient token balance or allowance')
+        alert('❌ Unauthorized\n\nThis quote was created for a different taker address.\n\nYou cannot fill this quote.')
+      } else if (errorMsg.includes('insufficient') || errorMsg.includes('exceeds balance') || errorMsg.includes('transfer amount exceeds')) {
+        setError('Insufficient token balance to complete settlement')
+        alert('❌ Insufficient Balance\n\nYou don\'t have enough tokens in your wallet to complete this trade.\n\nRequired: Check the quote amounts\nPlease add funds to your wallet and try again.')
       } else if (errorMsg.includes('user rejected') || errorMsg.includes('user denied')) {
         setError('Transaction rejected by user')
       } else {
         // Generic error - log full details but show friendly message
         console.error('Full error details:', err)
         setError('Settlement failed - check console for details')
+        alert('❌ Settlement Failed\n\nThe transaction could not be completed.\n\nError: ' + (err.reason || err.message || 'Unknown error') + '\n\nPlease check the console for more details.')
       }
 
       setIsLoading(false)
